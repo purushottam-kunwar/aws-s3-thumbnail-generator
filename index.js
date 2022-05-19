@@ -67,26 +67,34 @@ function resizeStream({ width }) {
     const sanitizedKey = Key.replace(/\+/g, ' ');
     const keyWithoutExtension = sanitizedKey.replace(/.[^.]+$/, '');
 
+    let suffix = ''
+
+    if (keyWithoutExtension){
+        suffix += keyWithoutExtension
+    } else {
+        suffix += sanitizedKey
+    }
+
     // Show keys and stuff.
     console.log('Original Key: ' + keyWithoutExtension);
     //console.log('prefix:' + prefix);
 
-    if (keyWithoutExtension.includes(`_${prefix}`)) {
+    if (suffix.includes(`_${prefix}`)) {
         console.log('Already a Thumbnail.');
         context.fail('Already a Thumbnail.');
         return;
-      }
-
-    // Infer the image type from the file suffix.
-    const typeMatch = sanitizedKey.match(/\.([^.]*)$/);
-    if (!typeMatch) {
-      console.error('Could not determine the image type.');
-      // context.fail('Could not determine the image type.');
-      return;
     }
 
+    // Infer the image type from the file suffix.
+    // const typeMatch = sanitizedKey.match(/\.([^.]*)$/);
+    // if (!typeMatch) {
+    //   console.error('Could not determine the image type.');
+    //   // context.fail('Could not determine the image type.');
+    //   return;
+    // }
+
     // Check that the image type is supported
-    const fileExt = typeMatch[1].toLowerCase();
+    // const fileExt = typeMatch[1].toLowerCase();
     // if (
     //   fileExt != 'jpg' &&
     //   fileExt != 'png' &&
@@ -98,14 +106,17 @@ function resizeStream({ width }) {
     //   return;
     // }
 
-    console.log('File extension: ' + fileExt);
-
+    // console.log('File extension: ' + fileExt);
     let newKey = '';
-    if (fileExt) {
-      newKey += `${keyWithoutExtension}_${prefix}.${fileExt}`;
-    } else {
-      newKey += `${keyWithoutExtension}_${prefix}`;
-    }
+
+    newKey += `${suffix}_${prefix}`;
+
+    
+    // if (fileExt) {
+    //   newKey += `${keyWithoutExtension}_${prefix}.${fileExt}`;
+    // } else {
+      
+    // }
     console.log('newKey: ' + newKey);
 
     // Create a pipeline inline to read the metadata.
